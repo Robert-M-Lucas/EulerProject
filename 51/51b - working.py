@@ -82,7 +82,7 @@ for current_power in range(5, 10):
 
         for i in range(int(10 ** (blank_count - 1)), int(10 ** blank_count)):
             #print(combination_to_size(i, combination), combination, i)
-            if combination_to_size(i, combination) == 8:
+            if combination_to_size(i, combination) == 9:
                 print(combination, i)
                 done = True
                 break
