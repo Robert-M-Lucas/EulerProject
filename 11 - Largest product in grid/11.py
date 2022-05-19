@@ -13,7 +13,7 @@ for y in grid_str:
 largest = 0
 
 
-def get_largest(start, move):
+def get_largest(start, move, done):
     curr_largest = 0
 
     x, y = start
@@ -24,47 +24,80 @@ def get_largest(start, move):
         except IndexError:
             break
         try:
-            num = grid[x][y] * grid[x - dx][y - dy] * grid[x - 2 * dx][y - 2 * dy] * grid[x - 3 * dx][y - 3 * dy]
+            to_product = ((x, y), (x-dx, y-dy), (x-2*dx, y-2*dy), (x-3*dx, y-3*dy))
+            num = 1
+            for i in to_product:
+                if i[0] < 0 or i[1] < 0:
+                    raise IndexError
+                num *= grid[i[0]][i[1]]
+                done[i[0]][i[1]] += 1
+
+            # print(" * ".join([str(v) for v in to_product]) + " = " + str(num))
+
             if num > curr_largest:
                 curr_largest = num
         except IndexError:
             pass
         x += dx
         y += dy
+
     return curr_largest
 
-print("Row")
-for y in range(len(grid[0])):
-    large = get_largest((0, y), (1, 0))
-    if large > largest:
-        largest = large
 
 print("Column")
-for x in range(len(grid)):
-    large = get_largest((x, 0), (0, 1))
+done = [[0 for _ in range(len(grid))] for __ in range(len(grid))]
+for y in range(len(grid[0])):
+    large = get_largest((0, y), (1, 0), done)
     if large > largest:
         largest = large
+for i in done:
+    print(i)
+print("***")
+
+print("Row")
+done = [[0 for _ in range(len(grid))] for __ in range(len(grid))]
+for x in range(len(grid)):
+    large = get_largest((x, 0), (0, 1), done)
+    if large > largest:
+        largest = large
+for i in done:
+    print(i)
+print("***")
 
 print("Diag 1")
+done = [[0 for _ in range(len(grid))] for __ in range(len(grid))]
 for y in range(len(grid[0])):
-    large = get_largest((0, y), (1, 1))
+    large = get_largest((0, y), (1, 1), done)
     if large > largest:
         largest = large
+for i in done:
+    print(i)
+print("***")
 
 for x in range(len(grid)):
-    large = get_largest((x, 0), (1, 1))
+    large = get_largest((x, 0), (1, 1), done)
     if large > largest:
         largest = large
+for i in done:
+    print(i)
+print("***")
 
 print("Diag 2")
+done = [[0 for _ in range(len(grid))] for __ in range(len(grid))]
 for y in range(len(grid[0])):
-    large = get_largest((len(grid)-1, y), (1, 1))
+    large = get_largest((len(grid)-1, y), (-1, 1), done)
     if large > largest:
         largest = large
+for i in done:
+    print(i)
+print("***")
 
 for x in range(len(grid)):
-    large = get_largest((x, len(grid)-1), (1, 1))
+    large = get_largest((x, len(grid)-1), (1, -1), done)
     if large > largest:
         largest = large
+for i in done:
+    print(i)
+print("***")
 
 print(largest)
